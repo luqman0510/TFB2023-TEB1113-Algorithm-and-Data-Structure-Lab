@@ -1,0 +1,147 @@
+#include <iostream>
+using namespace std;
+
+class Queue {
+private:
+    int front, rear, size, capacity;
+    string* arr;
+
+public:
+    Queue(int maxCapacity) {
+        capacity = maxCapacity;
+        arr = new string[capacity];
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    bool isFull() {
+        return size == capacity;
+    }
+
+    bool isEmpty() {
+        return size == 0;
+    }
+
+    void enqueue(string value) {
+        if (isFull()) {
+            cout << "\nQueue Overflow! Cannot enqueue.\n";
+            return;
+        }
+        rear = (rear + 1) % capacity; // circular increment
+        arr[rear] = value;
+        size++;
+        cout << "Enqueued: " << value << endl;
+    }
+
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "\nQueue Underflow! Cannot dequeue.\n";
+            return;
+        }
+        cout << "Dequeued: " << arr[front] << endl;
+        front = (front + 1) % capacity; // circular increment
+        size--;
+    }
+
+    void getFront() {
+        if (isEmpty()) {
+            cout << "\nQueue is empty.\n";
+            return;
+        }
+        cout << "Front element: " << arr[front] << endl;
+    }
+
+    void getRear() {
+        if (isEmpty()) {
+            cout << "\nQueue is empty.\n";
+            return;
+        }
+        cout << "Rear element: " << arr[rear] << endl;
+    }
+
+    void display() {
+        if (isEmpty()) {
+            cout << "\nQueue is empty.\n";
+            return;
+        }
+        cout << "\nQueue elements (front to rear): ";
+        for (int i = 0; i < size; i++) {
+            cout << arr[(front + i) % capacity] << " ";
+        }
+        cout << endl;
+    }
+
+    void queueInfo() {
+        cout << "\nCurrent size: " << size << " / " << capacity << endl;
+    }
+
+    ~Queue() {
+        delete[] arr;
+    }
+};
+
+int main() {
+    int maxSize, option;
+    string value;
+
+    cout << "Enter maximum queue size: ";
+    cin >> maxSize;
+
+    Queue q(maxSize);
+
+    do {
+        cout << "\n=== Queue Menu ===";
+        cout << "\n1. Enqueue";
+        cout << "\n2. Dequeue";
+        cout << "\n3. Front Element";
+        cout << "\n4. Rear Element";
+        cout << "\n5. Check if Full";
+        cout << "\n6. Check if Empty";
+        cout << "\n7. Display Queue";
+        cout << "\n8. Exit";
+        cout << "\nEnter your choice: ";
+        cin >> option;
+
+        switch (option) {
+            case 1:
+                cout << "Enter value to enqueue: ";
+                cin >> value;
+                q.enqueue(value);
+                break;
+            case 2:
+                q.dequeue();
+                break;
+            case 3:
+                q.getFront();
+                break;
+            case 4:
+                q.getRear();
+                break;
+            case 5:
+                if (q.isFull())
+                    cout << "\nQueue is FULL.\n";
+                else
+                    cout << "\nQueue is NOT full.\n";
+                q.queueInfo();
+                break;
+            case 6:
+                if (q.isEmpty())
+                    cout << "\nQueue is EMPTY.\n";
+                else
+                    cout << "\nQueue is NOT empty.\n";
+                q.queueInfo();
+                break;
+            case 7:
+                q.display();
+                break;
+            case 8:
+                cout << "\nExiting program...\n";
+                break;
+            default:
+                cout << "\nInvalid option!\n";
+        }
+    } while (option != 8);
+
+    return 0;
+}
