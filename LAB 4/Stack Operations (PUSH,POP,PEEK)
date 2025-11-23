@@ -1,0 +1,101 @@
+#include <iostream>
+using namespace std;
+
+// Node structure for stack
+struct Node {
+    string data;
+    Node* next;
+};
+
+// Stack class definition
+class Stack {
+private:
+    Node* top;   // points to the top element
+
+public:
+    // Constructor
+    Stack() {
+        top = nullptr;
+    }
+
+    // Push operation: add new element on top
+    void Push(string value) {
+        Node* newNode = new Node;
+        newNode->data = value;
+        newNode->next = top; // point to old top
+        top = newNode;       // new node becomes the top
+        cout << "[" << value << "] pushed onto stack.\n";
+    }
+
+    // Pop operation: remove top element
+    void Pop() {
+        if (top == nullptr) {
+            cout << "Stack is empty. Nothing to pop.\n";
+            return;
+        }
+        cout << "[" << top->data << "] popped from stack.\n";
+        Node* temp = top;
+        top = top->next;
+        delete temp;
+    }
+
+    // Peek operation: show top element
+    void Peek() {
+        if (top == nullptr) {
+            cout << "Stack is empty. No top element.\n";
+        } else {
+            cout << "Top element: " << top->data << endl;
+        }
+    }
+
+    // Display operation: show all elements
+    void Display() {
+        if (top == nullptr) {
+            cout << "Stack is empty.\n";
+            return;
+        }
+        cout << "\nStack contents (top to bottom):\n";
+        Node* current = top;
+        while (current != nullptr) {
+            cout << current->data << endl;
+            current = current->next;
+        }
+        cout << endl;
+    }
+
+    // Destructor to free memory
+    ~Stack() {
+        while (top != nullptr) {
+            Node* temp = top;
+            top = top->next;
+            delete temp;
+        }
+    }
+};
+
+// Main function
+int main() {
+    Stack s;
+
+    s.Push("test1");
+    s.Push("test2");
+    s.Push("test3");
+    s.Push("test4");
+    s.Push("test5");
+
+    cout << endl;
+    s.Display();
+
+    s.Peek();
+    cout << endl;
+
+    s.Pop();
+    s.Pop();
+
+    cout << endl;
+    s.Display();
+
+    s.Peek();
+
+    return 0;
+}
