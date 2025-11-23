@@ -1,0 +1,226 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+    
+    Node(int val) {
+        data = val;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+
+class BinarySearchTree {
+private:
+    Node* root;
+    
+    // Helper function to insert recursively
+    Node* insertHelper(Node* node, int val) {
+        if (node == nullptr) {
+            return new Node(val);
+        }
+        
+        if (val < node->data) {
+            node->left = insertHelper(node->left, val);
+        } else if (val > node->data) {
+            node->right = insertHelper(node->right, val);
+        }
+        
+        return node;
+    }
+    
+    // Helper function to find minimum value node
+    Node* findMin(Node* node) {
+        while (node->left != nullptr) {
+            node = node->left;
+        }
+        return node;
+    }
+    
+    // Helper function to delete recursively
+    Node* deleteHelper(Node* node, int val) {
+        if (node == nullptr) {
+            return nullptr;
+        }
+        
+        if (val < node->data) {
+            node->left = deleteHelper(node->left, val);
+        } else if (val > node->data) {
+            node->right = deleteHelper(node->right, val);
+        } else {
+            // Node with only one child or no child
+            if (node->left == nullptr) {
+                Node* temp = node->right;
+                delete node;
+                return temp;
+            } else if (node->right == nullptr) {
+                Node* temp = node->left;
+                delete node;
+                return temp;
+            }
+            
+            // Node with two children
+            Node* temp = findMin(node->right);
+            node->data = temp->data;
+            node->right = deleteHelper(node->right, temp->data);
+        }
+        
+        return node;
+    }
+    
+    // Helper function to search
+    bool searchHelper(Node* node, int val) {
+        if (node == nullptr) {
+            return false;
+        }
+        
+        if (node->data == val) {
+            return true;
+        } else if (val < node->data) {
+            return searchHelper(node->left, val);
+        } else {
+            return searchHelper(node->right, val);
+        }
+    }
+    
+    // Helper function for inorder traversal
+    void inorderHelper(Node* node) {
+        if (node != nullptr) {
+            inorderHelper(node->left);
+            cout << node->data << " ";
+            inorderHelper(node->right);
+        }
+    }
+    
+    // Helper function for preorder traversal
+    void preorderHelper(Node* node) {
+        if (node != nullptr) {
+            cout << node->data << " ";
+            preorderHelper(node->left);
+            preorderHelper(node->right);
+        }
+    }
+    
+    // Helper function for postorder traversal
+    void postorderHelper(Node* node) {
+        if (node != nullptr) {
+            postorderHelper(node->left);
+            postorderHelper(node->right);
+            cout << node->data << " ";
+        }
+    }
+    
+    // Helper function to delete tree
+    void deleteTree(Node* node) {
+        if (node != nullptr) {
+            deleteTree(node->left);
+            deleteTree(node->right);
+            delete node;
+        }
+    }
+
+public:
+    BinarySearchTree() {
+        root = nullptr;
+    }
+    
+    ~BinarySearchTree() {
+        deleteTree(root);
+    }
+    
+    void insert(int val) {
+        root = insertHelper(root, val);
+    }
+    
+    void remove(int val) {
+        root = deleteHelper(root, val);
+    }
+    
+    bool search(int val) {
+        return searchHelper(root, val);
+    }
+    
+    void inorder() {
+        cout << "Inorder: ";
+        inorderHelper(root);
+        cout << endl;
+    }
+    
+    void preorder() {
+        cout << "Preorder: ";
+        preorderHelper(root);
+        cout << endl;
+    }
+    
+    void postorder() {
+        cout << "Postorder: ";
+        postorderHelper(root);
+        cout << endl;
+    }
+    
+    void levelOrder() {
+        if (root == nullptr) {
+            cout << "Tree is empty" << endl;
+            return;
+        }
+        
+        cout << "Level Order: ";
+        queue<Node*> q;
+        q.push(root);
+        
+        while (!q.empty()) {
+            Node* current = q.front();
+            q.pop();
+            cout << current->data << " ";
+            
+            if (current->left != nullptr) {
+                q.push(current->left);
+            }
+            if (current->right != nullptr) {
+                q.push(current->right);
+            }
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    BinarySearchTree bst;
+    
+    // Insert some values
+    bst.insert(50);
+    bst.insert(30);
+    bst.insert(70);
+    bst.insert(20);
+    bst.insert(40);
+    bst.insert(60);
+    bst.insert(80);
+    
+    cout << "Binary Search Tree Operations:\n" << endl;
+    
+    // Display traversals
+    bst.inorder();
+    bst.preorder();
+    bst.postorder();
+    bst.levelOrder();
+    
+    // Search for values
+    cout << "\nSearching for 40: " << (bst.search(40) ? "Found" : "Not Found") << endl;
+    cout << "Searching for 100: " << (bst.search(100) ? "Found" : "Not Found") << endl;
+    
+    // Delete a node
+    cout << "\nDeleting 30..." << endl;
+    bst.remove(30);
+    bst.inorder();
+    
+    cout << "\nDeleting 50..." << endl;
+    bst.remove(50);
+    bst.inorder();
+    
+    return 0;
+}
