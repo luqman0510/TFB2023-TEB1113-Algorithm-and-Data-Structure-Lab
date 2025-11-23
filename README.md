@@ -1,5 +1,4 @@
 # TFB2023-TEB1113-Algorithm-and-Data-Structure-Lab
-# TFB2023_TEB1113_ADS — Lab Completion Table
 
 | ✔️ | Lab Title                                   | Date Completed |
 |----|---------------------------------------------|----------------|
